@@ -1,5 +1,5 @@
+import Exercicio01 from "./components/Exercício01";
 function App () {
-    if(67 === 67)
-    return  console.log("triple T impressed");
+    <Exercicio01/>
       
 }
