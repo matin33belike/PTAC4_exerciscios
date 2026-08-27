@@ -1,5 +1,10 @@
 import Exercicio01 from "./components/Exercício01";
+import BuscaUser from "./components/exec1aula4";
+import BuscaUserErrado from "./components/exec2aula4";
 function App () {
-    <Exercicio01/>
-      
-}
+    return (
+      <BuscaUserErrado/>
+    )
+  }
+
+export default App
