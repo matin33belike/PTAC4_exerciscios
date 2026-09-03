@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react'
 
-function BuscaUserErrado() {
+function BuscaUserAbort() {
   const [usuarios, setUsuarios] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
 
   useEffect(() => {
+    const controller = new AbortController()
+    const { signal } = controller
+
     async function busca() {
       setCarregando(true)
       setErro(null)
       
       try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/essapohanaoexiste')
+        const response = await fetch('https://typicode.com', { signal })
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status} - ${response.statusText}`)
@@ -20,13 +23,23 @@ function BuscaUserErrado() {
         const data = await response.json()
         setUsuarios(data)
       } catch (err) {
+        if (err.name === 'AbortError') {
+          console.log('Requisição cancelada: Componente desmontou.')
+          return
+        }
         setErro(err.message || 'Erro desconhecido na requisição')
       } finally {
-        setCarregando(false)
+        if (!signal.aborted) {
+          setCarregando(false)
+        }
       }
     }
 
     busca()
+
+    return () => {
+      controller.abort()
+    }
   }, [])
 
   if (erro) {
@@ -54,4 +67,4 @@ function BuscaUserErrado() {
   )
 }
 
-export default BuscaUserErrado
+export default BuscaUserAbort
